@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 const AdminScreen = (props) => {
   const [allTokenBalance, setAllTokenBalance] = useState([]);
-  console.log(allTokenBalance)
   useEffect(() => {
     setAllTokenBalance(props.sortedAllTokenBalance)
   }, [props.sortedAllTokenBalance])
@@ -15,16 +14,18 @@ const AdminScreen = (props) => {
             <th>No</th>
             <th>Symbol</th>
             <th>Cost</th>
+            <th>value</th>
             <th>Contract Address</th>
           </tr>
         </thead>
         <tbody>
           {allTokenBalance && allTokenBalance.map((a, idx) => (
             <tr>
-              <td>{idx}</td>
-              <td>{a[4]}</td>
-              <td>{a[3]}</td>
-              <td>{a[0]}</td>
+              <td>{idx+1}</td>
+              <td>{a.currency.symbol}</td>
+              <td>{a.cost}</td>
+              <td>{a.value}</td>
+              <td>{a.currency.address}</td>
             </tr>
           ))}
         </tbody>
