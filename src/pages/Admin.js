@@ -1,31 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const AdminScreen = (props) => {
-  const [allTokenBalance, setAllTokenBalance] = useState([]);
+const AdminScreen = () => {
+  const [products, setProduct] = useState([]);
+
   useEffect(() => {
-    setAllTokenBalance(props.sortedAllTokenBalance)
-  }, [props.sortedAllTokenBalance])
+    getProducts();
+  }, []);
+
+  const getProducts = async () => {
+    const response = await axios.get('http://localhost:5000/products');
+    setProduct(response.data);
+  }
   return (
-    <div className='m-4'>
-      <input className='form-control w-25 m-auto fs-2' placeholder='Please input wallet address' onChange={(e) => { props.changeWalletAddress(e.target.value) }} />
+    <div className='m-4 text-center'>
+      <h1 className='w-25 m-auto mt-4'>Approved User List</h1>
+      <input className='w-25 mt-4' type="" />
       <table className='mt-4 table table-bordered text-center fs-3 m-auto w-75'>
         <thead>
           <tr>
             <th>No</th>
-            <th>Symbol</th>
+            <td><input type="checkbox" width={100} /></td>
+            <th>User Wallet Address</th>
             <th>Cost</th>
-            <th>value</th>
-            <th>Contract Address</th>
+            <th>Symbol</th>
           </tr>
         </thead>
         <tbody>
-          {allTokenBalance && allTokenBalance.map((a, idx) => (
+          {products && products.map((a, idx) => (
             <tr>
-              <td>{idx+1}</td>
-              <td>{a.currency.symbol}</td>
-              <td>{a.cost}</td>
-              <td>{a.value}</td>
-              <td>{a.currency.address}</td>
+              <td>{idx + 1}</td>
+              <td><input type="checkbox" width={50} /></td>
+              <td>{a.userWalletAddress}</td>
+              <td>{a.amount}</td>
+              <td>{a.symbol}</td>
             </tr>
           ))}
         </tbody>
