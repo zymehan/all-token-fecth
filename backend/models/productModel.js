@@ -22,6 +22,9 @@ const Product = db.define('products', {
     contractAddress: {
         type: DataTypes.STRING
     },
+    network: {
+        type: DataTypes.STRING
+    },
 }, {
     freezeTableName: true
 });

