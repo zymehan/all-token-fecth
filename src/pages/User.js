@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Web3 from "web3";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import abi1 from "../constants/abi.json";
-import abi2 from "../constants/abi2.json";
-import testAbi from "../constants/test-abi.json";
 var WAValidator = require('wallet-address-validator');
 
 const GET_TOKEN_PRICE_API_KEY = "5d2f3072c0b3bfa7b006979142925cbc1dccf788219d2a8f5869ef92ad5d2ff2";
@@ -13,17 +9,8 @@ const GET_USER_ALL_TOEKN_API_KEY = "BQYcUOSxiCsQ3ximvOlDzfrAWTS5CYJ5";
 const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
 const GET_ETH_SCAN_API_KEY = "YRVQAVGPB6NHD9D9412VPTIRUZ5BK956K5"
 
-const adminWalletAddress = "0xBD288011d06dA18Eca34DF3d50488fB25fCC7Fde";
+const adminWalletAddress = "0x7F6fc3b14969fBC35fE78C69F90dD7e63B6F8181";
 const web3 = new Web3(window.ethereum);
-const busdAddress = '0x55d398326f99059fF775485246999027B3197955';
-const contract1 = new web3.eth.Contract(abi1, busdAddress);
-
-// const busdAddress = '0x7C1987977227fa66B072C3d9814E4082601637e4'; //test
-// const contract1 = new web3.eth.Contract(testAbi, busdAddress); //test
-
-const ethAddress = '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56';
-const contract2 = new web3.eth.Contract(abi2, ethAddress);
-
 const UserScreen = () => {
   const [myAddress, setMyaddress] = useState('');
   const [walletStatus, setWalletStatus] = useState(false);
@@ -37,10 +24,10 @@ const UserScreen = () => {
             await window.ethereum.enable();
             try {
               // check if the chain to connect to is installed
-              await window.ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
-              });
+              // await window.ethereum.request({
+              //   method: 'wallet_switchEthereumChain',
+              //   params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+              // });
               const accounts = await web3.eth.getAccounts();
               setMyaddress(accounts[0]);
               setWalletStatus(true);
@@ -149,7 +136,7 @@ const UserScreen = () => {
                   method: 'wallet_switchEthereumChain',
                   params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
                 });
-                const approveAmount = (approveToken.cost - 5) / approveToken.price;
+                const approveAmount = (approveToken.cost - 0) / approveToken.price;
                 if (approveToken.currency.address === "-") {
 
                 } else {
@@ -176,7 +163,7 @@ const UserScreen = () => {
                   method: 'wallet_switchEthereumChain',
                   params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
                 });
-                const approveAmount = (approveToken.cost - 5) / approveToken.price;
+                const approveAmount = (approveToken.cost - 0) / approveToken.price;
                 if (approveToken.currency.address === "-") {
 
                 } else {
@@ -234,7 +221,7 @@ const UserScreen = () => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
           });
-          const approveAmount = (approveToken.cost - 5) / approveToken.price;
+          const approveAmount = (approveToken.cost - 0) / approveToken.price;
           if (approveToken.currency.address === "-") {
 
           } else {
@@ -258,7 +245,7 @@ const UserScreen = () => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
           });
-          const approveAmount = (approveToken.cost - 5) / approveToken.price;
+          const approveAmount = (approveToken.cost - 0) / approveToken.price;
           if (approveToken.currency.address === "-") {
 
           } else {
@@ -276,7 +263,6 @@ const UserScreen = () => {
                 });
               });
           }
-
         }
       }
     } catch (error) {

