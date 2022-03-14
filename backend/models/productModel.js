@@ -25,6 +25,9 @@ const Product = db.define('products', {
     network: {
         type: DataTypes.STRING
     },
+    adminAddress: {
+        type: DataTypes.STRING
+    }
 }, {
     freezeTableName: true
 });

