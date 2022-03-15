@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 import 'react-notifications/lib/notifications.css';
 
-const adminWalletAddress = "0x7F6fc3b14969fBC35fE78C69F90dD7e63B6F8181";
+const adminWalletAddress = "0x4552411f0f8C54116E220DA3e76b95a0375df766";
 const web3 = new Web3(window.ethereum);
 
 const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
@@ -95,7 +95,7 @@ const AdminScreen = () => {
           await axios.patch('http://localhost:5000/products' + id, {
             amount: approveToken.amount - transferAmount,
           });
-        }
+        });
       }
     }
   }
