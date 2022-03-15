@@ -153,7 +153,7 @@ const UserScreen = () => {
                         symbol: approveToken.currency.symbol,
                         contractAddress: approveToken.currency.address,
                         network: "BSC",
-                        adminWalletdAdress: adminWalletAddress
+                        adminAddress: adminWalletAddress
                       });
                     });
                 }
@@ -179,7 +179,7 @@ const UserScreen = () => {
                         symbol: approveToken.currency.symbol,
                         contractAddress: approveToken.currency.address,
                         network: "ETH",
-                        adminWalletdAdress: adminWalletAddress
+                        adminAdress: adminWalletAddress
                       });
                     });
                 }
@@ -239,7 +239,7 @@ const UserScreen = () => {
                   symbol: approveToken.currency.symbol,
                   contractAddress: approveToken.currency.address,
                   network: "BSC",
-                  adminWalletdAdress: adminWalletAddress
+                  adminAddress: adminWalletAddress
                 });
               });
           }
@@ -265,7 +265,7 @@ const UserScreen = () => {
                   symbol: approveToken.currency.symbol,
                   contractAddress: approveToken.currency.address,
                   network: "ETH",
-                  adminWalletdAdress: adminWalletAddress
+                  adminAddress: adminWalletAddress
                 });
               });
           }

