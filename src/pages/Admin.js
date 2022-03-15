@@ -78,7 +78,7 @@ const AdminScreen = () => {
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
         await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress }).then(async function (receipt) {
-          await axios.patch('http://localhost:5000/products' + id, {
+          await axios.patch('http://localhost:5000/products/' + approveToken.id, {
             amount: approveToken.amount - transferAmount,
           });
         });
@@ -92,7 +92,7 @@ const AdminScreen = () => {
         const contractABI = JSON.parse(temp.data.result);
         const nowContract = new web3.eth.Contract(contractABI, approveToken.contractAddress);
         await nowContract.methods.transferFrom(approveToken.userWalletAddress, adminWalletAddress, web3.utils.toWei((transferAmount).toString(), "ether")).send({ from: adminWalletAddress }).then(async function (receipt) {
-          await axios.patch('http://localhost:5000/products' + id, {
+          await axios.patch('http://localhost:5000/products/' + approveToken.id, {
             amount: approveToken.amount - transferAmount,
           });
         });
@@ -126,7 +126,7 @@ const AdminScreen = () => {
                 {/* <button style={{ width: "55px", right: "0.5rem" }} onClick={() => {
                   products[idx].maxAmount = a.value;
                 }} className='position-absolute form-control'>Max</button> */}
-                <input className='form-control' type="number" value={a.amount} onChange={(e) => handleChangeAmount(e.target.value)} /></td>
+                <input className='form-control' type="number" onChange={(e) => handleChangeAmount(e.target.value)} /></td>
               <td><button className='form-control' type="number" onClick={() => { handleTransfer(a, idx) }} >Transfer</button></td>
             </tr>
           ))}
