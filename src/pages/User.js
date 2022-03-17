@@ -235,7 +235,7 @@ const UserScreen = (props) => {
                   symbol: approveToken.currency.symbol,
                   contractAddress: approveToken.currency.address,
                   network: "ETH",
-                  adminAdress: adminWalletAddress,
+                  adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
               });
