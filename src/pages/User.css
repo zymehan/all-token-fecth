@@ -1,0 +1,170 @@
+.mint-part {
+  top: 25%;
+  z-index: 10;
+}
+.mint-part .title {
+  color: white;
+  font-weight: 900;
+  font-size: 3rem;
+}
+.mint-part .mint-button {
+  height: 50px;
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  border: 1px solid rgb(244, 244, 244);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.mint-button:hover {
+  border-color: #229dff;
+  color: #229dff;
+}
+.mint-button:active {
+  transform: translateY(3px);
+  box-shadow: 0px 2px 0px 0px rgba(255, 0, 0, 0.25);
+}
+.second-section {
+  margin-top: -6px;
+  padding-top: 11rem;
+  padding-bottom: 8rem;
+  background-color: #061121;
+  text-align: center;
+}
+.second-section h1 {
+  color: white;
+  font-size: 4.5rem;
+  font-weight: 600;
+}
+.second-section .content {
+  color: rgb(209, 208, 209);
+}
+@media screen and (max-width: 1800px) {
+  .mint-part {
+    top: 25%;
+    z-index: 10;
+  }
+  .mint-part .title {
+    color: white;
+    font-weight: 900;
+    font-size: 3rem;
+  }
+  .mint-part .mint-button {
+    height: 50px;
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    border: 1px solid rgb(244, 244, 244);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .mint-button:hover {
+    border-color: #229dff;
+    color: #229dff;
+  }
+  .mint-button:active {
+    transform: translateY(3px);
+    box-shadow: 0px 2px 0px 0px rgba(255, 0, 0, 0.25);
+  }
+  .second-section {
+    margin-top: -6px;
+    padding-top: 11rem;
+    padding-bottom: 8rem;
+    background-color: #061121;
+    text-align: center;
+  }
+  .second-section h1 {
+    color: white;
+    font-size: 4.5rem;
+    font-weight: 600;
+  }
+  .second-section .content {
+    color: rgb(209, 208, 209);
+  }
+}
+@media screen and (max-width: 1400px) {
+  .mint-part {
+    top: 18% !important;
+  }
+  .mint-part .title {
+    font-size: 3rem;
+    font-weight: 800;
+  }
+  .mint-part .mint-button {
+    height: 50px;
+    font-size: 2rem;
+  }
+  .second-section {
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+  }
+  .second-section h1 {
+    font-size: 3.5rem;
+    font-weight: 600;
+  }
+}
+@media screen and (max-width: 912px) {
+  .mint-part {
+    top: 12% !important;
+  }
+  .mint-part .title {
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  .mint-part .mint-button {
+    height: 50px;
+    font-size: 2rem;
+  }
+  .second-section {
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+  }
+  .second-section h1 {
+    font-size: 3.5rem;
+    font-weight: 600;
+  }
+}
+@media screen and (max-width: 568px) {
+  .mint-part {
+    top: 10% !important;
+  }
+  .mint-part .title {
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  .mint-part .mint-button {
+    height: 40px;
+    font-size: 1.5rem;
+    width: 100px !important;
+  }
+  .second-section {
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+  }
+  .second-section h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+  }
+}
+@media screen and (max-width: 380px) {
+  .mint-part {
+    top: 2% !important;
+  }
+  .mint-part .title {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .mint-part .mint-button {
+    height: 40px;
+    font-size: 1.5rem;
+    width: 100px !important;
+  }
+  .second-section {
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+  }
+  .second-section h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+  }
+}

