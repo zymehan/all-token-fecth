@@ -29,10 +29,6 @@
   padding: 0 8px;
   text-decoration: none;
 }
-.Nav a:hover {
-  /* transform: scale(1.1);
-    color: #333333; */
-}
 .Nav button {
   padding: 10px;
   outline: none;

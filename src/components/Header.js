@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Header.css";
-import { Link } from 'react-router-dom';
 import { CSSTransition } from "react-transition-group";
 import { BsJustify } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
@@ -9,7 +8,7 @@ import logoImage from "../assets/logo.png";
 import playstore from "../assets/playstore.webp";
 import appstore from "../assets/appstore.webp";
 
-export default function Header() {
+export default function Header(props) {
   const [isNavVisible, setNavVisibility] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -47,7 +46,7 @@ export default function Header() {
         <nav className="Nav justify-content-end d-flex align-items-center">
           <a href="https://crypto.onelink.me/veNW" ><img src={playstore} className="Logo" alt="logo" style={{ width: "40px" }} /></a>
           <a href="https://crypto.onelink.me/RSfq" ><img src={appstore} className="Logo" alt="logo" style={{ width: "40px" }} /></a>
-          <button>Wallet Connect</button>
+          <button onClick={props.walletConnect}>Wallet Connect</button>
         </nav>
       </CSSTransition>
       <button onClick={toggleNav} className="Burger">
