@@ -35,7 +35,7 @@ export default function Header(props) {
   };
 
   return (
-    <header className="Header align-items-center">
+    <header className="Header align-items-center main-header">
       <img src={logoImage} className="Logo" alt="logo" />
       <CSSTransition
         in={!isSmallScreen || isNavVisible}

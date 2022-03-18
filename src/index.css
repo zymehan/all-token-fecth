@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+#WEB3_CONNECT_MODAL_ID{
+  z-index: 11111111111111;
+}
+.sc-jRQBWg.uYscM.web3modal-modal-lightbox{
+  z-index: 111111;
+}

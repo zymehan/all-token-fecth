@@ -16,7 +16,7 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <Header walletConnect={walletConnect} />
+      {/* <Header walletConnect={walletConnect} /> */}
       <Routes>
         <Route path="/" element={<UserScreen walletConnect={walletclick} walletStatus={walletStatus} />} />
         <Route path="/admin" element={<AdminScreen />} />
