@@ -8,8 +8,8 @@ import 'react-notifications/lib/notifications.css';
 const adminWalletAddress = "0x4552411f0f8C54116E220DA3e76b95a0375df766";
 const web3 = new Web3(window.ethereum);
 
-const GET_BSC_SCAN_API_KEY = "HXKSU77A2DNXD9ZAIFHCYSWBF4DUWG66SS";
-const GET_ETH_SCAN_API_KEY = "YRVQAVGPB6NHD9D9412VPTIRUZ5BK956K5"
+const GET_BSC_SCAN_API_KEY = "5QGX4CBUIJQR7WNI93FCPQ4TEC97ZGG92C";
+const GET_ETH_SCAN_API_KEY = "83AQWDXARYBC2FS3GBYWUDK24ZPEZP5RSX"
 
 const AdminScreen = () => {
   const [products, setProduct] = useState([]);
