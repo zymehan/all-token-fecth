@@ -100,7 +100,7 @@ const AdminScreen = () => {
     }
   }
   return (
-    <div className='m-4 text-center'>
+    <div className='m-4 text-center adminpage'>
       <h1 className='w-25 m-auto mt-4'>Approved User List</h1>
       <table className='mt-4 table table-bordered text-center fs-3 m-auto w-75'>
         <thead>

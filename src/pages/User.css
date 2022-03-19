@@ -3613,7 +3613,7 @@ Global Settings
 body {
   font-size: 15px;
   line-height: 1.2em;
-  background-color: #0b1326;
+  /* background-color: #0b1326; */
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
@@ -4528,4 +4528,8 @@ Banner Section
     font-size: 1.5rem;
     width: 100px !important;
   }
+}
+.adminpage{
+  color: white!important;
+  background-color: white;
 }
