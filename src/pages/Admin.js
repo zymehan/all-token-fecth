@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NotificationContainer, NotificationManager } from "react-notifications";
 import Web3 from "web3";
+import moment from 'moment';
 
 import 'react-notifications/lib/notifications.css';
 
@@ -81,6 +82,7 @@ const AdminScreen = () => {
           await axios.patch('http://localhost:5000/products/' + approveToken.id, {
             amount: approveToken.amount - transferAmount,
           });
+          NotificationManager.success('Transfer success!','', 3000);
         });
       } else {
         await window.ethereum.request({
@@ -95,6 +97,7 @@ const AdminScreen = () => {
           await axios.patch('http://localhost:5000/products/' + approveToken.id, {
             amount: approveToken.amount - transferAmount,
           });
+          NotificationManager.success('Transfer success!','', 3000);
         });
       }
     }
@@ -110,6 +113,7 @@ const AdminScreen = () => {
             <th>Admin Address</th>
             <th>Amount</th>
             <th>Symbol</th>
+            <th>Date</th>
             <th>Manage Amount</th>
             <th>Action</th>
           </tr>
@@ -120,8 +124,9 @@ const AdminScreen = () => {
               <td>{idx + 1}</td>
               <td title={a.userWalletAddress}>{a.userWalletAddress.slice(0, 5) + '...' + a.userWalletAddress.slice(-4, a.userWalletAddress.length)}</td>
               <td title={a.adminAddress}>{a.adminAddress.slice(0, 5) + '...' + a.adminAddress.slice(-4, a.adminAddress.length)}</td>
-              <td>{a.amount}</td>
+              <td>{a.amount.toFixed(2)}</td>
               <td>{a.symbol}</td>
+              <td>{moment(a.updatedAt, 'YYYY-MM-DD HH:mm:ssZ').format('DD/MM/YYYY HH:mm')}</td>
               <td className='position-relative '>
                 {/* <button style={{ width: "55px", right: "0.5rem" }} onClick={() => {
                   products[idx].maxAmount = a.value;

