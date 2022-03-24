@@ -22,7 +22,7 @@ const config = {
     97: "0x61",
   },
   MAX_STAKE_AMOUNT_PER_USER_DIV_DECIMALS: 10000,
-  INFURA_ID: "88b3ca144c6648df843909df0371ee08",
+  INFURA_ID: "9f08884ad87343d89b817b96e19e5808",
   chainID: 97,
 };
 

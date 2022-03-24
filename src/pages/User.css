@@ -4543,6 +4543,9 @@ Banner Section
 .notification-container .title {
   color: white;
 }
+.sc-jSFkmK.jYxAGf.web3modal-modal-lightbox{
+  z-index: 1111111111;
+}
 .react-responsive-modal-modal {
   background-color: #273138;
   background-color: rgb(39, 49, 56);
@@ -4555,6 +4558,7 @@ Banner Section
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   max-width: 800px;
   max-height: 100%;
+  z-index: 1111111;
   overflow: auto;
 }
 .modal-body .title {
